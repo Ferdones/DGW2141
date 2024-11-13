@@ -1,29 +1,54 @@
 package org.example;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.By;
+import java.time.Duration;
 
 public class HelloWorld {
     public static void main(String[] args) {
-        // Setează calea către ChromeDriver
-        System.setProperty("webdriver.chrome.driver", "D:\\webdriver\\chromedriver.exe");
 
-        // Configurează opțiunile pentru Opera
-        ChromeOptions options = new ChromeOptions();
-        options.setBinary("D:\\webdriver.=\\operadriver"); // Verifică calea către Opera GX
-        options.addArguments("--remote-allow-origins=*");
+        // Configurare WebDriver cu WebDriverManager
+        WebDriverManager.chromedriver().setup();
+        ssh -T git@github.com
 
-        // Creează o instanță a driverului Chrome (care va utiliza Opera)
-        WebDriver driver = new ChromeDriver(options);
+        WebDriver driver = null;
+        try {
+            System.out.println("Pornirea browserului...");
+            driver = new ChromeDriver();
+            System.out.println("Deschid Google Chrome pentru a accesa pagina...");
 
-        // Maximizează fereastra
-        driver.manage().window().maximize();
+            // Deschide pagina
+            driver.get("https://demoqa.com/automation-practice-form");
+            System.out.println("Pagina deschisă. Aștept să se încarce...");
 
-        // Navighează la o pagină web
-        driver.get("https://www.google.com");
+            // Așteaptă până când titlul paginii conține "Automation Practice Form"
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            wait.until(ExpectedConditions.titleContains("Automation Practice Form"));
+            System.out.println("Pagina s-a încărcat complet.");
 
-        // Închide driverul după test
-        driver.quit();
+            // Execută JavaScript pentru a modifica conținutul paginii
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("document.body.innerHTML = '<h1>Hello, World!</h1>'");
+
+            // Așteaptă până când apare un tag <h1> pentru a confirma modificarea
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("h1")));
+            System.out.println("Mesajul a fost afișat pe pagina accesată.");
+
+            // Așteaptă un input de la utilizator înainte de a închide browserul
+            System.out.println("Apăsați Enter pentru a închide browserul...");
+            new java.util.Scanner(System.in).nextLine();
+        } catch (Exception e) {
+            System.out.println("A apărut o eroare: " + e.getMessage());
+        } finally {
+            if (driver != null) {
+                // Închide browserul
+                driver.quit();
+            }
+        }
     }
 }
