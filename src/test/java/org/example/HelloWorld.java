@@ -1,5 +1,21 @@
 package org.example;
 
+<<<<<<< HEAD
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.setProperty("webdriver.chrome.driver", "D:\\chromedriver-win64\\chromedriver.exe");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+        WebDriver driver = new ChromeDriver(options);
+        driver.manage().window().maximize();
+
+        driver.get("https://demoqa.com/automation-practice-form");
+        driver.quit();
+=======
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -50,5 +66,6 @@ public class HelloWorld {
                 driver.quit();
             }
         }
+>>>>>>> ead0374df2c106041d682515115ad7ad07504b56
     }
 }
